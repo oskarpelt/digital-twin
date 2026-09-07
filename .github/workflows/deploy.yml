@@ -1,0 +1,21 @@
+name: Deploy to HF Spaces
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
+
+      - name: Push to HF Spaces
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git remote add hf https://oskarpelt:$HF_TOKEN@hf.co/spaces/oskarpelt/digital-twin
+          git push hf master:main --force
