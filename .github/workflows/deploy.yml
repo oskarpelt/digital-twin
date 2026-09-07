@@ -17,5 +17,4 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          git remote add hf https://oskarpelt:$HF_TOKEN@hf.co/spaces/oskarpelt/digital-twin
-          git push hf master:main --force
+          git push https://oskarpelt:$HF_TOKEN@huggingface.co/spaces/oskarpelt/digital-twin master:main --force
