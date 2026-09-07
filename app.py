@@ -31,11 +31,13 @@ def chat(message, history) -> str:
     return response.choices[0].message.content
 
 
+demo = gr.ChatInterface(
+    chat,
+    examples=EXAMPLES,
+    title="Digital Twin",
+    description="Talk to my AI twin about my career",
+    chatbot=gr.Chatbot(show_label=False, avatar_images=(None, "assets/me.jpg")),
+)
+
 if __name__ == "__main__":
-    gr.ChatInterface(
-        chat,
-        examples=EXAMPLES,
-        title="Digital Twin",
-        description="Talk to my AI twin about my career",
-        chatbot=gr.Chatbot(show_label=False, avatar_images=(None, "assets/me.jpg")),
-    ).launch(css=CSS, js=JS, theme=gr.themes.Base())
+    demo.launch(css=CSS, js=JS, theme=gr.themes.Base())
