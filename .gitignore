@@ -1,0 +1,10 @@
+CLAUDE.md
+linkedin.pdf
+resume.pdf
+summary.txt
+.env
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
