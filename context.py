@@ -1,5 +1,8 @@
 import os
 from pypdf import PdfReader
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def extract_pdf(path) -> str:
