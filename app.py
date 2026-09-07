@@ -5,6 +5,13 @@ from styles import CSS, JS, EXAMPLES
 from dotenv import load_dotenv
 import gradio as gr
 
+try:
+    import spaces
+    gpu = spaces.GPU
+except ImportError:
+    def gpu(fn):
+        return fn
+
 load_dotenv(override=True)
 
 MODEL_NAME = "gpt-5.4-mini"
@@ -14,6 +21,7 @@ openai = OpenAI()
 system = [{"role": "system", "content": TWIN_SYSTEM_PROMPT}]
 
 
+@gpu
 def chat(message, history) -> str:
     messages = system + history + [{"role": "user", "content": message}]
     response = openai.chat.completions.create(
