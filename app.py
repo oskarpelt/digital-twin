@@ -2,6 +2,7 @@ from openai import OpenAI
 from context import TWIN_SYSTEM_PROMPT
 from tools import tools, handle_tool_calls
 from styles import CSS, JS, EXAMPLES
+from guardrails import check_rate_limit, trim_history
 from dotenv import load_dotenv
 import gradio as gr
 
@@ -25,8 +26,10 @@ system = [{"role": "system", "content": TWIN_SYSTEM_PROMPT}]
 
 
 @gpu
-def chat(message, history) -> str:
-    messages = system + history + [{"role": "user", "content": message}]
+def chat(message, history, request: gr.Request) -> str:
+    if not check_rate_limit(request.client.host):
+        return "Too many requests — please wait a moment before trying again."
+    messages = system + trim_history(history) + [{"role": "user", "content": message}]
     response = openai.chat.completions.create(
         model=MODEL_NAME, messages=messages, tools=tools
     )
