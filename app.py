@@ -26,23 +26,34 @@ system = [{"role": "system", "content": TWIN_SYSTEM_PROMPT}]
 
 
 @gpu
-def chat(message, history, request: gr.Request) -> str:
+def chat(message, history, request: gr.Request):
     if not check_rate_limit(request.client.host):
-        return "Too many requests — please wait a moment before trying again."
+        yield "Too many requests — please wait a moment before trying again."
+        return
+
     messages = system + trim_history(history) + [{"role": "user", "content": message}]
+
     response = openai.chat.completions.create(
         model=MODEL_NAME, messages=messages, tools=tools
     )
     while response.choices[0].finish_reason == "tool_calls":
-        message = response.choices[0].message
-        tool_calls = message.tool_calls
-        results = handle_tool_calls(tool_calls)
-        messages.append(message)
+        msg = response.choices[0].message
+        results = handle_tool_calls(msg.tool_calls)
+        messages.append(msg)
         messages.extend(results)
         response = openai.chat.completions.create(
             model=MODEL_NAME, messages=messages, tools=tools
         )
-    return response.choices[0].message.content
+
+    stream = openai.chat.completions.create(
+        model=MODEL_NAME, messages=messages, stream=True
+    )
+    text = ""
+    for chunk in stream:
+        delta = chunk.choices[0].delta.content
+        if delta:
+            text += delta
+            yield text
 
 
 demo = gr.ChatInterface(
