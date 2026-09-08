@@ -7,10 +7,13 @@ import gradio as gr
 
 try:
     import spaces
+
     gpu = spaces.GPU
 except ImportError:
+
     def gpu(fn):
         return fn
+
 
 load_dotenv(override=True)
 
@@ -42,9 +45,11 @@ def chat(message, history) -> str:
 demo = gr.ChatInterface(
     chat,
     examples=EXAMPLES,
-    title="Digital Twin",
+    title="Oskari's Digital Twin",
     description="Talk to my AI twin about my career",
-    chatbot=gr.Chatbot(show_label=False, avatar_images=(None, "assets/me.jpg")),
+    chatbot=gr.Chatbot(
+        show_label=False, avatar_images=(None, "assets/me.jpg"), height=800
+    ),
 )
 
 if __name__ == "__main__":

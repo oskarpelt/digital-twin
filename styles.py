@@ -1,9 +1,5 @@
 """Styling constants for the digital twin Gradio app."""
 
-GOLD = "#ecad0a"
-BLUE = "#209dd7"
-PURPLE = "#753991"
-
 EXAMPLES = [
     "Tell me about your background and experience.",
     "What have you built that you're most proud of?",
@@ -14,343 +10,183 @@ EXAMPLES = [
 ]
 
 CSS = """
-:root {
-  --twin-gold: #ecad0a;
-  --twin-blue: #209dd7;
-  --twin-purple: #753991;
-  --twin-bg: #0d0d10;
-  --twin-surface: #16161b;
-  --twin-surface-2: #1c1c22;
-  --twin-border: #2a2a32;
-  --twin-border-strong: #3a3a44;
-  --twin-text: #ececef;
-  --twin-muted: #8c8c95;
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600&display=swap');
+
+/* ── Override Gradio theme tokens ── */
+:root, .gradio-container {
+  --body-background-fill:              #0a0a0a !important;
+  --block-background-fill:             #111111 !important;
+  --input-background-fill:             #111111 !important;
+  --input-background-fill-focus:       #111111 !important;
+  --border-color-primary:              #2a2a2a !important;
+  --border-color-accent:               #39ff14 !important;
+  --color-accent:                      #39ff14 !important;
+  --body-text-color:                   #e0e0e0 !important;
+  --body-text-color-subdued:           #777777 !important;
+  --input-text-size:                   13px    !important;
+  --button-primary-background-fill:    #111111 !important;
+  --button-primary-background-fill-hover: #0f2a08 !important;
+  --button-primary-border-color:       #39ff14 !important;
+  --button-primary-text-color:         #39ff14 !important;
+  --button-secondary-background-fill:  #111111 !important;
+  --button-secondary-border-color:     #2a2a2a !important;
+  --button-secondary-text-color:       #777777 !important;
+  --button-secondary-background-fill-hover: #111111 !important;
+  --button-secondary-border-color-hover:    #39ff14 !important;
+  --button-secondary-text-color-hover:      #39ff14 !important;
+  --shadow-drop:                       none    !important;
+  --block-radius:                      0px     !important;
+  --input-radius:                      0px     !important;
+  --button-large-radius:               0px     !important;
+  --button-small-radius:               0px     !important;
+  --font:                              'JetBrains Mono', 'Courier New', monospace !important;
+  --font-mono:                         'JetBrains Mono', 'Courier New', monospace !important;
 }
 
-/* Light mode: Gradio adds `.dark` to <body> when dark; absence = light.
-   Only the neutral palette flips — gold/blue/purple accents stay identical. */
-body:not(.dark) {
-  --twin-bg: #f4f4f6;
-  --twin-surface: #ffffff;
-  --twin-surface-2: #ededf0;
-  --twin-border: #dcdce2;
-  --twin-border-strong: #b8b8c0;
-  --twin-text: #1a1a20;
-  --twin-muted: #6a6a72;
+/* ── Hide Gradio chrome ── */
+footer, .built-with, .show-api { display: none !important; }
+
+/* ── Page ── */
+html, body, gradio-app {
+  background: #0a0a0a !important;
+  font-family: 'JetBrains Mono', monospace !important;
 }
 
-footer, .built-with, .show-api, .api-docs { display: none !important; }
+/* Scanline */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 2px,
+    rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px
+  );
+  z-index: 9999;
+}
 
-html, body, gradio-app { background: var(--twin-bg) !important; }
-
-/* ---------- Stable layout ---------- */
+/* ── Container ── */
 .gradio-container {
-  background: var(--twin-bg) !important;
-  color: var(--twin-text) !important;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
-  width: 100% !important;
-  max-width: 880px !important;
-  min-width: 0 !important;
+  max-width: 860px !important;
   margin: 0 auto !important;
   padding: 32px 24px 48px !important;
+  font-family: 'JetBrains Mono', monospace !important;
 }
-.gradio-container .main, .gradio-container .contain, .gradio-container .wrap {
-  width: 100% !important;
-  max-width: 100% !important;
-  min-width: 0 !important;
-}
-.gradio-container * { min-width: 0; }
 
-/* ---------- Title ---------- */
+/* ── Title ── */
 .gradio-container h1 {
-  color: var(--twin-text) !important;
-  font-size: 26px !important;
-  font-weight: 700 !important;
-  letter-spacing: -0.02em !important;
-  border-left: 3px solid var(--twin-gold);
-  padding-left: 12px !important;
-  margin: 4px 0 8px !important;
+  color: #39ff14 !important;
+  font-size: 22px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em !important;
+  margin: 0 0 4px !important;
   text-align: left !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+.gradio-container h1::before { content: '> '; opacity: 0.4; }
+
+/* ── Chatbot ── */
+.chatbot .label-wrap, .chatbot label { display: none !important; }
+.chatbot, .chatbot.block { min-height: 600px !important; }
+
+/* ── Message bubbles ── */
+[data-testid="user"] {
+  background: #181818 !important;
+  color: #39ff14 !important;
+  border-left: 2px solid #39ff14 !important;
+  border-radius: 0 !important;
+  padding: 10px 14px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 13px !important;
+}
+[data-testid="user"] * {
+  color: #39ff14 !important;
+  background: transparent !important;
+  font-family: 'JetBrains Mono', monospace !important;
 }
 
-/* ---------- Sharp corners on structural pieces ---------- */
-.chatbot, .chatbot *, .block, .form,
-button, input, textarea,
-.examples button {
+[data-testid="bot"] {
+  background: transparent !important;
+  color: #e0e0e0 !important;
+  border-left: 2px solid #1a7a08 !important;
+  border-radius: 0 !important;
+  padding: 10px 14px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 13px !important;
+}
+[data-testid="bot"] * {
+  color: #e0e0e0 !important;
+  background: transparent !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+[data-testid="bot"] a { color: #39ff14 !important; }
+
+/* Strip default bubble chrome */
+.message, .message.panel-full-width {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
   border-radius: 0 !important;
 }
 
-/* ---------- Block surfaces ---------- */
-.block, .form { background: transparent !important; box-shadow: none !important; }
-
-/* ---------- Hide the Chatbot label / header strip ---------- */
-.chatbot > .block-label,
-.chatbot > label,
-.chatbot .label-wrap,
-.chatbot .block-label,
-.chatbot > .label-container {
-  display: none !important;
+/* ── Input ── */
+textarea {
+  caret-color: #39ff14;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+textarea:focus {
+  box-shadow: 0 0 0 1px #39ff14, 0 0 8px rgba(57,255,20,0.12) !important;
 }
 
-/* ---------- Chatbot frame ---------- */
-.chatbot, .chatbot.block {
-  background: var(--twin-surface) !important;
-  border: 1px solid var(--twin-border) !important;
-  min-height: 460px !important;
-  box-shadow: none !important;
-}
-.chatbot .placeholder, .chatbot .placeholder * { color: var(--twin-muted) !important; }
-
-/* ---------- Message rows: strip parent backgrounds ---------- */
-.message-row,
-.message-row > div,
-.message-row .role,
-.message-wrap, .bubble-wrap {
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-}
-
-/* ---------- Reset borders on every bubble variant first ---------- */
-.message-row .message,
-.message-row .message-bubble,
-.message-row .bubble {
-  border: 0 !important;
-  box-shadow: none !important;
-  padding: 6px 10px !important;
-}
-
-/* ---------- Bubble backgrounds (broad to cover Gradio variants) ---------- */
-.message-row.user-row .message,
-.message-row.user-row .message-bubble,
-.message-row.user-row .bubble,
-.message-row[data-role="user"] .message,
-.message-row[data-role="user"] .message-bubble {
-  background: var(--twin-blue) !important;
-  color: #ffffff !important;
-}
-
-.message-row.bot-row .message,
-.message-row.bot-row .message-bubble,
-.message-row.bot-row .bubble,
-.message-row[data-role="assistant"] .message,
-.message-row[data-role="assistant"] .message-bubble {
-  background: var(--twin-surface-2) !important;
-  color: var(--twin-text) !important;
-}
-
-/* ---------- Purple stripe ----------
-   Apply to every common bubble class for assistant rows (we don't know which
-   one the running Gradio uses), then suppress on any *nested* instance so the
-   stripe lands on the outermost matching element only — exactly one stripe. */
-.message-row.bot-row .message,
-.message-row.bot-row .bubble,
-.message-row.bot-row .message-bubble,
-.message-row[data-role="assistant"] .message,
-.message-row[data-role="assistant"] .bubble,
-.message-row[data-role="assistant"] .message-bubble {
-  border-left: 2px solid var(--twin-purple) !important;
-}
-
-.message-row.bot-row .message .message,
-.message-row.bot-row .message .bubble,
-.message-row.bot-row .message .message-bubble,
-.message-row.bot-row .bubble .message,
-.message-row.bot-row .bubble .bubble,
-.message-row.bot-row .bubble .message-bubble,
-.message-row.bot-row .message-bubble .message,
-.message-row.bot-row .message-bubble .bubble,
-.message-row.bot-row .message-bubble .message-bubble,
-.message-row[data-role="assistant"] .message .message,
-.message-row[data-role="assistant"] .message .bubble,
-.message-row[data-role="assistant"] .message .message-bubble,
-.message-row[data-role="assistant"] .bubble .message,
-.message-row[data-role="assistant"] .bubble .bubble,
-.message-row[data-role="assistant"] .bubble .message-bubble,
-.message-row[data-role="assistant"] .message-bubble .message,
-.message-row[data-role="assistant"] .message-bubble .bubble,
-.message-row[data-role="assistant"] .message-bubble .message-bubble {
-  border-left: 0 !important;
-}
-
-/* ---------- Uniform font size in bubbles ----------
-   The "first paragraph different size" was caused by a leaky `.prose p:first-of-type`
-   selector. Force every paragraph in a bubble to the same size. */
-.message-row .message,
-.message-row .message-bubble,
-.message-row .bubble {
-  font-size: 14px !important;
-  line-height: 1.55 !important;
-}
-.message-row .message p,
-.message-row .message-bubble p,
-.message-row .bubble p,
-.message-row .prose p {
-  font-size: 14px !important;
-  line-height: 1.55 !important;
-  margin: 0 0 8px !important;
-  color: inherit !important;
-}
-.message-row .message p:last-child,
-.message-row .message-bubble p:last-child,
-.message-row .bubble p:last-child,
-.message-row .prose p:last-child { margin-bottom: 0 !important; }
-
-/* Strip stray internal borders/backgrounds from anything inside a bubble */
-.message-row .message *,
-.message-row .message-bubble *,
-.message-row .bubble * {
-  background: transparent !important;
-  border-color: transparent !important;
-  box-shadow: none !important;
-  color: inherit !important;
-}
-.message-row .message a,
-.message-row .message-bubble a {
-  color: var(--twin-gold) !important;
-  text-decoration: underline;
-}
-
-/* ---------- Input row alignment ---------- */
-.input-row,
-.gr-input-row,
-.chat-input-row,
-form[class*="input"] { align-items: stretch !important; }
-
-textarea, input[type="text"] {
-  background: var(--twin-surface) !important;
-  border: 1px solid var(--twin-border) !important;
-  color: var(--twin-text) !important;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
-  font-size: 14px !important;
-  padding: 12px 14px !important;
-  line-height: 1.4 !important;
-  min-height: 48px !important;
-}
-textarea:focus, input[type="text"]:focus {
-  border-color: var(--twin-gold) !important;
-  outline: none !important;
-  box-shadow: 0 0 0 1px var(--twin-gold) !important;
-}
-textarea::placeholder, input::placeholder { color: var(--twin-muted) !important; }
-
-/* ---------- Buttons ---------- */
-button {
-  font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace !important;
-  letter-spacing: 0.12em !important;
-  text-transform: uppercase !important;
-  font-size: 11px !important;
-  font-weight: 600 !important;
-  border: 1px solid var(--twin-border) !important;
-  background: transparent !important;
-  color: var(--twin-text) !important;
-  padding: 0 16px !important;
-  min-height: 48px !important;
-  align-self: stretch !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  cursor: pointer;
-  transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
-}
-button:hover { border-color: var(--twin-gold) !important; color: var(--twin-gold) !important; }
-
-button.primary,
-button[variant="primary"],
-button.submit,
-button.submit-button,
-.submit-button,
-button.lg.primary {
-  background: var(--twin-gold) !important;
-  border: 1px solid var(--twin-gold) !important;
-  color: #111111 !important;
-  min-height: 48px !important;
-  align-self: stretch !important;
-  padding: 0 14px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-button.primary:hover,
-button.submit:hover,
-.submit-button:hover,
-button.lg.primary:hover {
-  background: #ffc320 !important;
-  border-color: #ffc320 !important;
-  color: #111111 !important;
-}
-
-/* ---------- Submit-button icon: center vertically and size correctly ---------- */
-button.submit svg,
-button.submit-button svg,
-.submit-button svg,
-button.primary svg,
-button[variant="primary"] svg {
-  width: 18px !important;
-  height: 18px !important;
-  margin: 0 auto !important;
-  display: block !important;
-  align-self: center !important;
-  color: #111111 !important;
-  fill: currentColor !important;
-  stroke: currentColor !important;
-}
-
-/* ---------- Examples ---------- */
-.examples, .examples-holder, [data-testid="examples"] {
-  background: transparent !important;
-  padding: 0 !important;
-  margin-top: 14px !important;
-}
-.examples table, .examples-table { background: transparent !important; border: 0 !important; }
-.examples button, .example, .examples td button, [data-testid="examples"] button {
-  background: var(--twin-surface) !important;
-  border: 1px solid var(--twin-border) !important;
-  color: var(--twin-text) !important;
+/* ── Examples ── */
+.examples button, [data-testid="examples"] button {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 12px !important;
   text-transform: none !important;
   letter-spacing: 0 !important;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
-  font-size: 13px !important;
-  font-weight: 400 !important;
-  padding: 10px 14px !important;
   text-align: left !important;
-  min-height: 0 !important;
-  align-self: auto !important;
-  display: inline-block !important;
+  padding: 8px 12px !important;
 }
-.examples button:hover, .example:hover, [data-testid="examples"] button:hover {
-  border-color: var(--twin-blue) !important;
-  color: var(--twin-blue) !important;
-  background: var(--twin-surface) !important;
+.examples button:hover, [data-testid="examples"] button:hover,
+.examples button:hover *, [data-testid="examples"] button:hover * {
+  color: #39ff14 !important;
+  background: #111111 !important;
+  border-color: #39ff14 !important;
 }
 
-/* ---------- Icon buttons (clear, retry, copy) ---------- */
-.icon-button, .chatbot .icon-button {
-  color: var(--twin-muted) !important;
-  background: transparent !important;
-  border: 0 !important;
-  min-height: 0 !important;
-  align-self: auto !important;
-  padding: 4px !important;
-  display: inline-flex !important;
+/* ── Avatar ── */
+.bot-row .avatar-container {
+  width: 52px !important;
+  height: 52px !important;
+  min-width: 52px !important;
+  display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+  overflow: hidden !important;
 }
-.icon-button:hover, .chatbot .icon-button:hover { color: var(--twin-gold) !important; }
+.bot-row .avatar-container .avatar-image,
+.avatar-container:not(.thumbnail-item) img {
+  width: 52px !important;
+  height: 52px !important;
+  min-width: 52px !important;
+  min-height: 52px !important;
+  padding: 0 !important;
+  object-fit: cover !important;
+}
 
-/* ---------- Scrollbar ---------- */
-::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: var(--twin-bg); }
-::-webkit-scrollbar-thumb { background: var(--twin-border-strong); }
-::-webkit-scrollbar-thumb:hover { background: var(--twin-purple); }
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #0a0a0a; }
+::-webkit-scrollbar-thumb { background: #2a2a2a; }
+::-webkit-scrollbar-thumb:hover { background: #39ff14; }
 
-/* ---------- Selection ---------- */
-::selection { background: var(--twin-gold); color: #111111; }
+/* ── Selection ── */
+::selection { background: #39ff14; color: #000; }
 
-/* ---------- Mobile ---------- */
+/* ── Mobile ── */
 @media (max-width: 640px) {
-  .gradio-container { padding: 22px 14px 36px !important; }
-  .gradio-container h1 { font-size: 22px !important; }
+  .gradio-container { padding: 20px 12px 36px !important; }
+  .gradio-container h1 { font-size: 18px !important; }
 }
 """
 
@@ -364,8 +200,6 @@ JS = """
   };
   setTimeout(focusInput, 300);
 
-  // Re-focus the message field whenever Gradio re-enables it
-  // (i.e. after the assistant finishes responding).
   const watchTextarea = (area) => {
     if (area.dataset.twinWatched) return;
     area.dataset.twinWatched = '1';
