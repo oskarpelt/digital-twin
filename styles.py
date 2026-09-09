@@ -155,7 +155,7 @@ textarea:focus {
 }
 
 /* ── Avatar ── */
-.bot-row .avatar-container {
+.gradio-container .avatar-container:not(.thumbnail-item) {
   width: 52px !important;
   height: 52px !important;
   min-width: 52px !important;
@@ -164,8 +164,7 @@ textarea:focus {
   justify-content: center !important;
   overflow: hidden !important;
 }
-.bot-row .avatar-container .avatar-image,
-.avatar-container:not(.thumbnail-item) img {
+.gradio-container .avatar-container:not(.thumbnail-item) img {
   width: 52px !important;
   height: 52px !important;
   min-width: 52px !important;
@@ -187,12 +186,47 @@ textarea:focus {
 @media (max-width: 640px) {
   .gradio-container { padding: 20px 12px 36px !important; }
   .gradio-container h1 { font-size: 18px !important; }
+
+  [data-testid="user"],
+  [data-testid="bot"] {
+    max-width: none !important;
+    font-size: 12px !important;
+  }
+  [data-testid="user"] *,
+  [data-testid="bot"] * {
+    font-size: 12px !important;
+  }
+
+  .block.flex.auto-margin {
+    height: 380px !important;
+    max-height: 380px !important;
+    min-height: unset !important;
+  }
+
+  div.bubble-wrap > div > div.message-row > div.avatar-container { display: none !important; }
+
+  .bubble { max-width: 100% !important; }
+
+  html, body {
+    touch-action: pan-y !important;
+    overflow-x: hidden !important;
+  }
 }
 """
 
 JS = """
 () => {
   document.title = 'Digital Twin';
+
+  const vp = document.querySelector('meta[name="viewport"]');
+  if (vp) {
+    vp.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+  } else {
+    const m = document.createElement('meta');
+    m.name = 'viewport';
+    m.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+    document.head.appendChild(m);
+  }
 
   const focusInput = () => {
     const areas = document.querySelectorAll('textarea');
