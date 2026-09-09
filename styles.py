@@ -68,6 +68,7 @@ body::after {
 /* ── Container ── */
 .gradio-container {
   max-width: 860px !important;
+  width: 100% !important;
   margin: 0 auto !important;
   padding: 32px 24px 48px !important;
   font-family: 'JetBrains Mono', monospace !important;
@@ -88,6 +89,7 @@ body::after {
 /* ── Chatbot ── */
 .chatbot .label-wrap, .chatbot label { display: none !important; }
 .chatbot, .chatbot.block { min-height: 600px !important; }
+.block.flex.auto-margin { width: 100% !important; }
 
 /* ── Message bubbles ── */
 [data-testid="user"] {
