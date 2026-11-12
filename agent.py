@@ -12,7 +12,12 @@ def run_agent(client, model, messages):
     """
     for _ in range(MAX_TOOL_ROUNDS + 1):
         stream = client.chat.completions.create(
-            model=model, messages=messages, tools=tools, stream=True
+            name="generate-response",  # Langfuse observation name
+            model=model,
+            messages=messages,
+            tools=tools,
+            stream=True,
+            stream_options={"include_usage": True},  # usage/cost on streams
         )
         text = ""
         calls: dict[int, dict] = {}

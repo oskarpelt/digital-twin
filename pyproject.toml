@@ -12,6 +12,7 @@ dependencies = [
     "openai",
     "python-dotenv",
     "resend>=2.43.0",
+    "langfuse>=5.2.0",
 ]
 
 [dependency-groups]
