@@ -4,6 +4,7 @@ import os
 import re
 import resend
 from dotenv import load_dotenv
+from langfuse import get_client
 
 load_dotenv(override=True)
 
@@ -99,9 +100,18 @@ def handle_tool_calls(tool_calls):
         else:
             try:
                 arguments = json.loads(tool_call["function"]["arguments"] or "{}")
-                result = tool(**arguments)
-            except (json.JSONDecodeError, TypeError) as e:
-                result = f"Error: invalid tool arguments ({e})."
+            except json.JSONDecodeError as e:
+                arguments, result = None, f"Error: invalid tool arguments ({e})."
+            if arguments is not None:
+                # Trace the call as a "tool" step nested under the current chat turn.
+                with get_client().start_as_current_observation(
+                    as_type="tool", name=tool_name, input=arguments
+                ) as span:
+                    try:
+                        result = tool(**arguments)
+                    except TypeError as e:
+                        result = f"Error: invalid tool arguments ({e})."
+                    span.update(output=result)
         results.append(
             {
                 "role": "tool",
