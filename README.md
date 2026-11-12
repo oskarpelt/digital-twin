@@ -46,3 +46,9 @@ uv run python scripts/fetch_github.py
 ## Deployment
 
 Pushes to `master` are automatically deployed to Hugging Face Spaces via GitHub Actions. Persona data (`LINKEDIN`, `RESUME`, `SUMMARY`, `GITHUB`) and API keys are stored as HF Spaces secrets.
+
+## Tests
+
+```bash
+uv run --group dev pytest
+```
