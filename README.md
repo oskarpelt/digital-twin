@@ -20,6 +20,7 @@ An AI agent that acts as a digital twin of a person, allowing website visitors t
 - Answers questions about career, background, skills, and experience
 - Draws context from LinkedIn profile, resume, and personal GitHub projects
 - Visitors can leave a message — the agent collects their name, email, and message and delivers it via email
+- Every chat turn is traced with Langfuse (model calls, tool calls, token usage, cost), grouped into sessions per conversation
 - Auto-deployed to Hugging Face Spaces via GitHub Actions
 
 ## Stack
@@ -27,6 +28,7 @@ An AI agent that acts as a digital twin of a person, allowing website visitors t
 - [Gradio](https://gradio.app) — UI
 - [OpenAI](https://openai.com) — language model with tool calling
 - [Resend](https://resend.com) — email delivery
+- [Langfuse](https://langfuse.com) — tracing and observability
 
 ## Local development
 
@@ -37,6 +39,16 @@ uv sync
 uv run python app.py
 ```
 
+### Tracing (Langfuse)
+
+Tracing is optional. Without Langfuse credentials the app runs normally and tracing is disabled. To enable it, create a project in [Langfuse](https://langfuse.com) and set these in `.env`:
+
+- `LANGFUSE_PUBLIC_KEY` and `LANGFUSE_SECRET_KEY` — from Settings → API Keys
+- `LANGFUSE_BASE_URL` — your region, e.g. `https://cloud.langfuse.com` (EU) or `https://us.cloud.langfuse.com` (US)
+- `LANGFUSE_TRACING_ENVIRONMENT` — `development` locally, `production` on the Space, so traces stay separated
+
+Each chat turn is one trace (`chat-turn`) containing the model calls (`generate-response`) and tool calls (e.g. `leave_a_message`). Conversations are grouped into sessions. Email addresses are redacted before traces are sent; other message content, including names, is stored.
+
 To regenerate GitHub project context:
 
 ```bash
@@ -45,4 +57,4 @@ uv run python scripts/fetch_github.py
 
 ## Deployment
 
-Pushes to `master` are automatically deployed to Hugging Face Spaces via GitHub Actions. Persona data (`LINKEDIN`, `RESUME`, `SUMMARY`, `GITHUB`) and API keys are stored as HF Spaces secrets.
+Pushes to `master` are automatically deployed to Hugging Face Spaces via GitHub Actions. Persona data (`LINKEDIN`, `RESUME`, `SUMMARY`, `GITHUB`) and API keys (including the `LANGFUSE_*` variables) are stored as HF Spaces secrets.

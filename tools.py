@@ -1,7 +1,9 @@
 import json
 import os
+
 import resend
 from dotenv import load_dotenv
+from langfuse import get_client
 
 load_dotenv(override=True)
 
@@ -50,7 +52,12 @@ def handle_tool_calls(tool_calls):
         arguments = json.loads(tool_call.function.arguments)
         print(f"Tool called: {tool_name}", flush=True)
         tool = tool_map.get(tool_name)
-        result = tool(**arguments) if tool else "Unknown tool: " + tool_name
+        # Trace the call as a "tool" step nested under the current chat turn.
+        with get_client().start_as_current_observation(
+            as_type="tool", name=tool_name, input=arguments
+        ) as span:
+            result = tool(**arguments) if tool else "Unknown tool: " + tool_name
+            span.update(output=result)
         results.append(
             {
                 "role": "tool",
