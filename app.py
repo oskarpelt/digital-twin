@@ -69,7 +69,9 @@ def _traced_chat(message, history, request):
 def chat(message, history, request: gr.Request):
     # Must stay a plain generator function: Gradio detects streaming by checking
     # for one, and @observe's wrapper hides that.
-    yield from _traced_chat(message, history, request)
+    yield from _traced_chat(
+        message, history, request, langfuse_trace_id=langfuse.create_trace_id()
+    )
 
 
 demo = gr.ChatInterface(
