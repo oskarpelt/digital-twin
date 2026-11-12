@@ -1,8 +1,13 @@
 from openai import OpenAI
 from context import TWIN_SYSTEM_PROMPT
-from tools import tools, handle_tool_calls
+from agent import run_agent
 from styles import CSS, JS, EXAMPLES
-from guardrails import check_rate_limit, trim_history
+from guardrails import (
+    MAX_MESSAGE_CHARS,
+    check_rate_limit,
+    message_too_long,
+    trim_history,
+)
 from dotenv import load_dotenv
 import gradio as gr
 
@@ -30,30 +35,12 @@ def chat(message, history, request: gr.Request):
     if not check_rate_limit(request.client.host):
         yield "Too many requests — please wait a moment before trying again."
         return
+    if message_too_long(message):
+        yield f"That message is too long — please keep it under {MAX_MESSAGE_CHARS} characters."
+        return
 
     messages = system + trim_history(history) + [{"role": "user", "content": message}]
-
-    response = openai.chat.completions.create(
-        model=MODEL_NAME, messages=messages, tools=tools
-    )
-    while response.choices[0].finish_reason == "tool_calls":
-        msg = response.choices[0].message
-        results = handle_tool_calls(msg.tool_calls)
-        messages.append(msg)
-        messages.extend(results)
-        response = openai.chat.completions.create(
-            model=MODEL_NAME, messages=messages, tools=tools
-        )
-
-    stream = openai.chat.completions.create(
-        model=MODEL_NAME, messages=messages, stream=True
-    )
-    text = ""
-    for chunk in stream:
-        delta = chunk.choices[0].delta.content
-        if delta:
-            text += delta
-            yield text
+    yield from run_agent(openai, MODEL_NAME, messages)
 
 
 demo = gr.ChatInterface(
